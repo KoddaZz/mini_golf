@@ -48,28 +48,32 @@ def insert_data(data):
     conn.commit()
 
 
-def acceuil_joueur():
-    acceuil = input("Avez vous déjà joué ?")
-    assert acceuil in ["Oui","Non","oui","non"], "Répondez par oui ou par non"
-    if acceuil in ["oui","Oui"]:
+def accueil_joueur():
+    accueil = input("Avez vous déjà joué ?").lower() # Sert à mettre en minuscule .lower()
+    assert accueil in ["oui","non"], "Répondez par oui ou par non"
+    if accueil == "oui":
         connexion()
     else:
         inscription()
 
 
 def connexion():
-    pseudo = str(input("Quelle est votre pseudo ?"))
-    password = input("Quel est votre mot de passe ?")
-    test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
-    cursor.execute(test_existance, {"pseudo":pseudo, "password":password})
+    pseudo = input("Quel est votre pseudo ?")
 
-    # Recuperation du resultat
-    resultat = cursor.fetchall()
+    while True:
+        password = input("Quel est votre mot de passe ?")
+        test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
+        cursor.execute(test_existance, {"pseudo":pseudo, "password":password})
 
-    if len(resultat) == 0:
-        print("Veuillez réessayer !")
-    else:
+        # Recuperation du resultat
+        resultat = cursor.fetchall()
+
+        if len(resultat) == 0:
+            print("Veuillez réessayer !")
+            continue # Continuez la boucle while ( ne pas executer la ligne en dessous )
+        
         print("Connexion Réussie ! :)")
+        break # Permet de stopper la boucle
 
 def inscription():
     data = {}
@@ -200,7 +204,7 @@ else:                                     # EN HAUT A GAUCHE
 
 # CONNEXION / INSCRIPTION JOUEUR
     
-acceuil_joueur()
+accueil_joueur()
 while True:
     print(ma_balle.dx, ma_balle.dy)
     drapeau.draw()
@@ -259,5 +263,5 @@ while True:
 
 best_score = []  # création d'une liste pour conserver les meilleurs score du joueurs
 
-best_score.append(nbr_coups)
+best_score.append(nbr_coups)    
 
