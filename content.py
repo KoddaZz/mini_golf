@@ -49,7 +49,7 @@ def insert_data(data):
 
 
 def accueil_joueur():
-    accueil = input("Avez vous déjà joué ?").lower() # Sert à mettre en minuscule .lower()
+    accueil = input("Avez vous déjà joué ? ").lower() # Sert à mettre en minuscule .lower()
     assert accueil in ["oui","non"], "Répondez par oui ou par non"
     if accueil == "oui":
         connexion()
@@ -58,10 +58,10 @@ def accueil_joueur():
 
 
 def connexion():
-    pseudo = input("Quel est votre pseudo ?")
+    pseudo = input("Quel est votre pseudo ? ")
 
     while True:
-        password = input("Quel est votre mot de passe ?")
+        password = input("Quel est votre mot de passe ? ")
         test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
         cursor.execute(test_existance, {"pseudo":pseudo, "password":password})
 
@@ -69,7 +69,7 @@ def connexion():
         resultat = cursor.fetchall()
 
         if len(resultat) == 0:
-            print("Veuillez réessayer !")
+            print("Veuillez réessayer ! ")
             continue # Continuez la boucle while ( ne pas executer la ligne en dessous )
         
         print("Connexion Réussie ! :)")
@@ -77,16 +77,16 @@ def connexion():
 
 def inscription():
     data = {}
-    pseudo = input("Quel est votre pseudo")
+    pseudo = input("Quel est votre pseudo ? ")
 
     # Vérifie si le pseudo existe déjà
     existe = pseudo_existant(pseudo)
     while existe:
-        print("Ce pseudo est déjà utilisé veuillez en réutiliser un autre !")
-        pseudo = input("Quel est votre pseudo")
+        print("Ce pseudo est déjà utilisé veuillez en réutiliser un autre ! ")
+        pseudo = input("Quel est votre pseudo ? ")
         existe = pseudo_existant(pseudo)
     data["pseudo"] = pseudo
-    password = input("Entrez votre mot de passe !")
+    password = input("Entrez votre mot de passe ! ")
     data["password"] = password
 
         # Insert les données dans la base de données
