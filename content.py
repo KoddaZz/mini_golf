@@ -1,4 +1,3 @@
-
 import pygame
 import sys
 import time
@@ -28,10 +27,44 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS users(
      id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
      pseudo TEXT,
-     password TEXT
+     password TEXT,
+     score INT
+
 )
 """)
 conn.commit()
+
+pseudo = ""
+
+def get_player_score(pseudo):
+    cursor.execute("SELECT score FROM users WHERE pseudo = :pseudo", {"pseudo": pseudo})
+    result = cursor.fetchone()
+
+    if result is not None:
+        return result[0]  # Retourne le score s'il existe
+    else:
+        return False 
+
+
+def insert_data_score(pseudo, score):
+    # Vérifie si l'utilisateur existe dans la base de données
+    cursor.execute("SELECT * FROM users WHERE pseudo = :pseudo", {"pseudo": pseudo})
+    utilisateur = cursor.fetchone()
+
+    if utilisateur is not None:
+        # L'utilisateur existe, met à jour le score
+        if get_player_score(pseudo) == False:
+            cursor.execute("UPDATE users SET score = :score WHERE id = :user_id", {"score": score, "user_id": utilisateur[0]})
+            conn.commit()
+        else:
+            player_score = get_player_score(pseudo)
+            if player_score > score:
+                cursor.execute("UPDATE users SET score = :score WHERE id = :user_id", {"score": score, "user_id": utilisateur[0]})
+            conn.commit()
+    else:
+        print(f"Utilisateur {pseudo} non trouvé dans la base de données.")
+
+
 
 def insert_data(data):
     # Récupère les valeurs de la requête SQL
@@ -58,8 +91,25 @@ def accueil_joueur():
 
 
 def connexion():
+    global pseudo
     pseudo = input("Quel est votre pseudo ? ")
-
+    existe = pseudo_existant(pseudo)
+    essai = 0
+    while not existe: # SI le pseudo entré n'existe pas
+        print("Nom inconnu")
+        pseudo = input("Quel est votre pseudo ? ")
+        existe = pseudo_existant(pseudo)
+        essai +=1
+        if essai >= 3:
+            demande_inscription = input("Vous voulez vous créez un compte ?").lower()
+            assert demande_inscription in["oui","non"], "Répondez par oui ou par non"
+            if demande_inscription == "oui":
+                inscription()
+                break
+            else:
+                essai = 0
+                continue
+            
     while True:
         password = input("Quel est votre mot de passe ? ")
         test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
@@ -76,6 +126,7 @@ def connexion():
         break # Permet de stopper la boucle
 
 def inscription():
+    global pseudo
     data = {}
     pseudo = input("Quel est votre pseudo ? ")
 
@@ -108,19 +159,6 @@ def pseudo_existant(pseudo):
         return True
     
 
-
-
-
-
-
-
-
-# else si le joueur est inexistant -> INSCRIRE LE JOUEUR ( fonction inscrire ) 
-
-#def connexion(pseudo):
-    # reprendre les donneés existantes du joueur
-#def inscription_joueur(pseudo):
-    # inscrire le joueur ( pseudo / password )
 
 
 class Balle:     # ici on créé la classe balle
@@ -242,6 +280,7 @@ while True:
     if ma_balle.hitbox_balle.colliderect(drapeau.hitbox_trou) and ma_balle.dx**2 < 2.5 and ma_balle.dy**2 < 2.5 :
         print("Bravo", pseudo,"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
         #best_score.append(nbr_coups)
+        insert_data_score(pseudo,(nbr_coups-1))
         pygame.display.update()
         pygame.display.quit()
         sys.exit()
@@ -264,4 +303,3 @@ while True:
 best_score = []  # création d'une liste pour conserver les meilleurs score du joueurs
 
 best_score.append(nbr_coups)    
-
