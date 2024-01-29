@@ -43,7 +43,7 @@ def get_player_score(pseudo):
     if result is not None:
         return result[0]  # Retourne le score s'il existe
     else:
-        return False 
+        return False
 
 
 def insert_data_score(pseudo, score):
