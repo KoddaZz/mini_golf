@@ -36,47 +36,27 @@ conn.commit()
 
 pseudo = ""
 
-def get_player_score(pseudo):
-    cursor.execute("SELECT score FROM users WHERE pseudo = :pseudo", {"pseudo": pseudo})
-    result = cursor.fetchone()
-
-    if result is not None:
-        return result[0]  # Retourne le score s'il existe
-    else:
-        return False
 
 
 def insert_data_score(pseudo, score):
     # Vérifie si l'utilisateur existe dans la base de données
-    cursor.execute("SELECT * FROM users WHERE pseudo = :pseudo", {"pseudo": pseudo})
-    utilisateur = cursor.fetchone()
+    cursor.execute("SELECT id,score FROM users WHERE pseudo = :pseudo", {"pseudo": pseudo})
+    result = cursor.fetchone()
 
-    if utilisateur is not None:
-        # L'utilisateur existe, met à jour le score
-        if get_player_score(pseudo) == False:
-            cursor.execute("UPDATE users SET score = :score WHERE id = :user_id", {"score": score, "user_id": utilisateur[0]})
-            conn.commit()
-        else:
-            player_score = get_player_score(pseudo)
-            if player_score > score:
-                cursor.execute("UPDATE users SET score = :score WHERE id = :user_id", {"score": score, "user_id": utilisateur[0]})
-            conn.commit()
-    else:
-        print(f"Utilisateur {pseudo} non trouvé dans la base de données.")
+    # L'utilisateur n'existe pas (impossible a ce stade)
+    if result is None:
+        raise Exception("The given user does not exist: " + pseudo)
+    
+    # L'utilisateur existe mais son score n'est pas definit ou est superieur
+    if result[1] is None or result[1] > score:
+        cursor.execute("UPDATE users SET score = :score WHERE id = :user_id", {"score": score, "user_id": result[0]})
+        conn.commit()
 
 
 
 def insert_data(data):
-    # Récupère les valeurs de la requête SQL
-    pseudo = data["pseudo"]
-    password = data["password"]
-
     # Exécute la requête SQL
-    cursor.execute(
-    "INSERT INTO users (pseudo, password) VALUES (:pseudo, :password);",
-    {"pseudo": pseudo, "password": password},
-)
-
+    cursor.execute("INSERT INTO users (pseudo, password) VALUES (:pseudo, :password);", data)
     # Valide les modifications
     conn.commit()
 
@@ -248,7 +228,7 @@ while True:
     drapeau.draw()
 
     for obstacle in obstacles:
-
+        obstacle.draw()
         if ma_balle.hitbox_balle.colliderect(obstacle.hitbox_obstacle):
             ma_balle.dx = -ma_balle.dx
             ma_balle.dy = -ma_balle.dy
