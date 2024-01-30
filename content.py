@@ -21,7 +21,16 @@ fenetre.fill([0, 0, 0])
 conn = sqlite3.connect('data.db')
 cursor = conn.cursor()
 
+class User:
+    def __init__(self, username:str, score:int) -> None:
+        self.username: str = username
+        self.score:int = score
 
+class CRUD:
+    def get_user(username: str, password:str) -> User | None:
+        ...
+    def save_user(user:User) -> None:
+        ...
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users(
