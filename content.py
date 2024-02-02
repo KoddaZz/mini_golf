@@ -21,6 +21,7 @@ fenetre.fill([0, 0, 0])
 conn = sqlite3.connect('data.db')
 cursor = conn.cursor()
 
+
 class User:
     def __init__(self, username:str, score:int) -> None:
         self.username: str = username
@@ -31,6 +32,7 @@ class CRUD:
         ...
     def save_user(user:User) -> None:
         ...
+"""
 
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS users(
@@ -45,7 +47,7 @@ conn.commit()
 
 pseudo = ""
 
-
+"""
 
 def insert_data_score(pseudo, score):
     # Vérifie si l'utilisateur existe dans la base de données
@@ -55,7 +57,7 @@ def insert_data_score(pseudo, score):
     # L'utilisateur n'existe pas (impossible a ce stade)
     if result is None:
         raise Exception("The given user does not exist: " + pseudo)
-    
+
     # L'utilisateur existe mais son score n'est pas definit ou est superieur
     if result[1] is None or result[1] > score:
         cursor.execute("UPDATE users SET score = :score WHERE id = :user_id", {"score": score, "user_id": result[0]})
@@ -98,7 +100,7 @@ def connexion():
             else:
                 essai = 0
                 continue
-            
+
     while True:
         password = input("Quel est votre mot de passe ? ")
         test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
@@ -110,7 +112,7 @@ def connexion():
         if len(resultat) == 0:
             print("Veuillez réessayer ! ")
             continue # Continuez la boucle while ( ne pas executer la ligne en dessous )
-        
+
         print("Connexion Réussie ! :)")
         break # Permet de stopper la boucle
 
@@ -146,8 +148,128 @@ def pseudo_existant(pseudo):
         return False
     else:
         return True
-    
 
+
+
+# TENTATIVE DE TRANSFORMATION DE La GESTION DE LA BDD -> EN COURS..
+"""
+class Joueur:
+    def __init__(self, pseudo, password):
+        self.pseudo = pseudo
+        self.password = password
+        self._score = None
+
+    
+    def score(self):
+        return self._score
+
+    
+    def score(self, value):
+        if value is None or value > self._score:
+            self._score = value
+            cursor.execute("UPDATE users SET score = :score WHERE pseudo = :pseudo", {"score": value, "pseudo": self.pseudo})
+            conn.commit()
+
+    
+    def inscription(cls, pseudo, password):
+        data = {"pseudo": pseudo, "password": password}
+        insert_data(data)
+        return cls(pseudo, password)
+
+    
+    def connexion(cls):
+        pseudo = input("Quel est votre pseudo ? ")
+        existe = pseudo_existant(pseudo)
+        essai = 0
+        while not existe:
+            print("Nom inconnu")
+            pseudo = input("Quel est votre pseudo ? ")
+            existe = pseudo_existant(pseudo)
+            essai += 1
+            if essai >= 3:
+                demande_inscription = input("Vous voulez vous créez un compte ?").lower()
+                assert demande_inscription in ["oui", "non"], "Répondez par oui ou par non"
+                if demande_inscription == "oui":
+                    return cls.inscription(pseudo, password)
+                else:
+                    essai = 0
+                    continue
+
+        while True:
+            password = input("Quel est votre mot de passe ? ")
+            test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
+            cursor.execute(test_existance, {"pseudo": pseudo, "password": password})
+
+            # Recuperation du resultat
+            resultat = cursor.fetchall()
+
+            if len(resultat) == 0:
+                print("Veuillez réessayer ! ")
+                continue
+
+            print("Connexion Réussie ! :)")
+            break
+
+        return cls(pseudo, password)
+
+    def get_score(self):
+        cursor.execute("SELECT score FROM users WHERE pseudo = :pseudo", {"pseudo": self.pseudo})
+        result = cursor.fetchone()
+        return result[0]
+
+
+def pseudo_existant(pseudo):
+    test_pseudo = "SELECT * FROM users WHERE pseudo = :pseudo"
+    cursor.execute(test_pseudo, {"pseudo": pseudo})
+
+    # Recuperation du resultat
+    resultat = cursor.fetchall()
+
+    if len(resultat) == 0:
+        return False
+    else:
+        return True
+
+def accueil_joueur():
+    accueil = input("Avez vous déjà joué ? ").lower()
+    assert accueil in ["oui", "non"], "Répondez par oui ou par non"
+    if accueil == "oui":
+        return Joueur.connexion()
+    else:
+        return Joueur.inscription()
+
+class GestionnaireBaseDeDonnees:
+    def __init__(self):
+        self.conn = None
+        self.cursor = None
+
+    def __enter__(self):
+        self.conn = sqlite3.connect("data.db")
+        self.cursor = self.conn.cursor()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        if self.conn:
+            self.conn.close()
+
+    def insert_data(self, data):
+        self.cursor.execute("INSERT INTO users (pseudo, password) VALUES (:pseudo, :password);", data)
+        self.conn.commit()
+
+    def pseudo_existant(self, pseudo):
+        test_pseudo = "SELECT * FROM users WHERE pseudo = :pseudo"
+        self.cursor.execute(test_pseudo, {"pseudo": pseudo})
+
+        # Recuperation du resultat
+        resultat = self.cursor.fetchall()
+
+        if len(resultat) == 0:
+            return False
+        else:
+            return True
+    class Infos:
+        def ask
+    """
 
 
 class Balle:     # ici on créé la classe balle
@@ -230,7 +352,7 @@ else:                                     # EN HAUT A GAUCHE
     drapeau.y2 = HAUTEUR * 0.10
 
 # CONNEXION / INSCRIPTION JOUEUR
-    
+
 accueil_joueur()
 while True:
     print(ma_balle.dx, ma_balle.dy)
@@ -269,7 +391,7 @@ while True:
     if ma_balle.hitbox_balle.colliderect(drapeau.hitbox_trou) and ma_balle.dx**2 < 2.5 and ma_balle.dy**2 < 2.5 :
         print("Bravo", pseudo,"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
         #best_score.append(nbr_coups)
-        insert_data_score(pseudo,(nbr_coups-1))
+        Joueur.score
         pygame.display.update()
         pygame.display.quit()
         sys.exit()
@@ -291,4 +413,4 @@ while True:
 
 best_score = []  # création d'une liste pour conserver les meilleurs score du joueurs
 
-best_score.append(nbr_coups)    
+best_score.append(nbr_coups)
