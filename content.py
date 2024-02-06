@@ -37,7 +37,6 @@ conn.commit()
 pseudo = ""
 
 
-
 def insert_data_score(pseudo, score):
     # Vérifie si l'utilisateur existe dans la base de données
     cursor.execute("SELECT id,score FROM users WHERE pseudo = :pseudo", {"pseudo": pseudo})
