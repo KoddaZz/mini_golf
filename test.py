@@ -1,65 +1,62 @@
 import pygame
-import pygame_gui
+import pygame_menu
+from pygame_menu.widgets.core.widget import Widget
+import pygame_menu.widgets
+import pygame_menu._widgetmanager
 
+# Initialisation de Pygame
 pygame.init()
 
-# Créez une fenêtre Pygame
-screen = pygame.display.set_mode((800, 600))
-manager = pygame_gui.UIManager((800, 600))
+# Initialisation de la surface d'affichage
+pygame.display.set_mode((400, 300))  # Ajouter cette ligne
+def close_menu():
+    pygame.quit()
 
-# Créez une fenêtre de connexion
-login_window = pygame_gui.elements.UIWindow(
-    pygame.Rect(200, 150, 400, 300),
-    manager=manager,
-    window_display_title="Connexion",
-)
-
-accueil_window = pygame_gui.elements.UIWindow(
-    pygame.Rect(200, 150, 400, 300),
-    manager = manager,
-    window_display_title="Accueil",
+# Création du menu
+menu = pygame_menu.Menu(
+    height=300,
+    width=400,
+    title="Inscription",
+    theme=pygame_menu.themes.THEME_DEFAULT,
 )
 
-connexion_bouton_2 = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect(150, 150, 100, 30),
-    text="Connexion",
-    manager=manager,
-    container=accueil_window,
+
+menu_joueur = pygame_menu.Menu(
+    height=300,
+    width=400,
+    title="Menu Joueur",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+)
+menu_admin = pygame_menu.Menu(     
+    height=300,
+    width=400,
+    title="Menu Admin",
+    theme=pygame_menu.themes.THEME_DEFAULT,
 )
 
-# Ajoutez des éléments d'interface utilisateur
-pseudo_input = pygame_gui.elements.UITextEntryLine(
-    relative_rect=pygame.Rect(50, 50, 300, 30),
-    manager=manager,
-    container=login_window,
-)
-mdp_input = pygame_gui.elements.UITextEntryLine(
-    relative_rect=pygame.Rect(50, 100, 300, 30),
-    manager=manager,
-    container=login_window,
-)
-connexion_bouton = pygame_gui.elements.UIButton(
-    relative_rect=pygame.Rect(150, 150, 100, 30),
-    text="Connexion",
-    manager=manager,
-    container=login_window,
-)
+# Ajout des widgets au menu d'inscription
+menu.add.text_input("Nom d'utilisateur:", default="")
+menu.add.text_input("Mot de passe:", password=True)
+pygame_menu.widgets.Button("Joueur", menu=menu_joueur)
+pygame_menu.widgets.Button("Admin", menu=menu_admin)
+ 
 
+# Ajout des boutons aux menus secondaires
+pygame_menu.widgets.Button("Retour", menu=menu)
+pygame_menu.widgets.Button("Retour", menu=menu)
+
+# Ajout des événements aux boutons
+pygame_menu.widgets.Button("Quitter", menu=close_menu)
 # Boucle principale
-clock = pygame.time.Clock()
-running = True
-while running:
-    for event in pygame.event.get():
+while True:
+
+    # Gestion des événements
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame_gui.UI_BUTTON_PRESSED:
-            if event.ui_element == connexion_bouton_2:
-                print("Clicked")
-        manager.process_events(event)
+            close_menu()
+        menu.update(events)
 
-    manager.update(1 / 60)
-    manager.draw_ui(screen)
+    # Affichage des menus
+    menu.draw()
     pygame.display.flip()
-    clock.tick(60)
-
-pygame.quit()

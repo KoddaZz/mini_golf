@@ -4,6 +4,7 @@ import time
 from pygame.locals import *
 from random import randint
 import sqlite3
+import pygame_gui
 
 # randint(0,10) -> nb aléatoire entre 0 et 10
 
