@@ -1,12 +1,16 @@
+# Importation des modules nécessaires au fonctionnement du programme 
+
 import pygame
 import sys
 import time
 from pygame.locals import *
 from random import randint
 import sqlite3
-import pygame_gui
-
-# randint(0,10) -> nb aléatoire entre 0 et 10
+import pygame_menu
+from pygame_menu.widgets.core.widget import Widget
+import pygame_menu.widgets
+import pygame_menu._widgetmanager
+import pygame_menu.events as events
 
 LARGEUR = 500
 HAUTEUR = 500
@@ -36,6 +40,123 @@ CREATE TABLE IF NOT EXISTS users(
 conn.commit()
 
 pseudo = ""
+
+
+
+###################################################################################################
+
+#                       IMPORTATION DES MENUS - TEST
+
+#################################################################################################
+
+
+pygame.init()
+
+# Initialisation de la surface d'affichage
+display_surface = pygame.display.set_mode((400, 300))
+def close_menu():
+    pygame.quit()
+
+menu = pygame_menu.Menu(
+    height=300,
+    width=400,
+    title="Mini Golf",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+)
+
+# Create the "Connexion" menu
+menu_connexion = pygame_menu.Menu(
+    height=300,
+    width=400,
+    title="Connexion",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+)
+
+# Create the "Inscription" menu
+menu_inscription = pygame_menu.Menu(
+    height=300,
+    width=400,
+    title="Inscription",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+)
+
+
+username_value = ""
+password_value = ""
+def handle_connexion_click():
+    # Récupération des informations de connexion
+    print(username_value,password_value)
+    # Vérification des informations d'identification (remplacez ceci par votre logique)
+    #existe = pseudo_existant(pseudo)
+    menu_connexion.close()
+
+
+
+    #else:
+        # Echec de la connexion
+        #menu_connexion.add.label("Echec de la connexion", color=(255, 0, 0))
+
+def handle_inscription_click():
+    # Récupération des informations d'inscription
+    print(username_value, password_value)
+    
+    
+
+    # Inscription réussie
+    # menu_inscription.hide()
+    # menu_connexion.show()
+    # menu_connexion.add.label("Inscription réussie", color=(0, 255, 0))
+
+menu.add.button("Inscription",accept_kwargs=True, action=menu_inscription)
+menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
+# Menu "Connexion"
+def username_change(value):
+    global username_value
+    username_value = value
+    return username_value
+
+def password_change(value):
+    global password_value
+    password_value = value
+    return password_value
+
+
+
+menu_connexion.add.text_input("Username:", default="",onchange=username_change)
+menu_connexion.add.text_input("Password:", password=True,onchange=password_change)
+menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexion_click)
+menu_connexion.add.button("Quitter", accept_kwargs=True, action=exit)
+
+# Menu "Inscription"
+menu_inscription.add.text_input("Username:", default="",onchange=username_change)
+menu_inscription.add.text_input("Password:", password=True,onchange=password_change)
+menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
+menu_inscription.add.button("Quitter", accept_kwargs=True, action=exit)
+
+
+menu.mainloop(display_surface)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
