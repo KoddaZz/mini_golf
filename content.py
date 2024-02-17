@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS users(
 """)
 conn.commit()
 
-pseudo = ""
+
 
 
 
@@ -84,6 +84,20 @@ menu_inscription = pygame_menu.Menu(
     onclose=CLOSE,
 )
 
+username_value = ""
+password_value = ""
+
+def username_change(value):
+    global username_value
+    username_value = value
+    return username_value
+
+def password_change(value):
+    global password_value
+    password_value = value
+    return password_value
+
+
 
 def pseudo_existant(pseudo):
     test_pseudo = "SELECT * FROM users WHERE pseudo = :pseudo"
@@ -111,7 +125,8 @@ def connexion():
         
 
     if not existe or resultat == 0: # SI le pseudo entré n'existe pas
-        menu_connexion.mainloop(display_surface)
+        menu_connexion.clear()
+        menu.mainloop(display_surface)
         existe = pseudo_existant(username_value)
         test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
         cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
@@ -121,7 +136,7 @@ def connexion():
 
         if len(resultat) == 0:
             print("Veuillez réessayer ! ")
-            menu_connexion.mainloop(display_surface)
+            menu.mainloop(display_surface)
         else:
             print("Connexion Réussie ! :)")
         
@@ -132,8 +147,7 @@ def connexion():
 
 
 
-username_value = ""
-password_value = ""
+
 def handle_connexion_click():
     # Récupération des informations de connexion
     print(username_value,password_value)
@@ -161,15 +175,7 @@ def handle_inscription_click():
 menu.add.button("Inscription",accept_kwargs=True, action=menu_inscription)
 menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
 # Menu "Connexion"
-def username_change(value):
-    global username_value
-    username_value = value
-    return username_value
 
-def password_change(value):
-    global password_value
-    password_value = value
-    return password_value
 
 
 
@@ -233,34 +239,6 @@ def insert_data(data):
     cursor.execute("INSERT INTO users (pseudo, password) VALUES (:pseudo, :password);", data)
     # Valide les modifications
     conn.commit()
-
-
-def connexion():
-    global username_value
-    global password_value
-    
-    existe = pseudo_existant(username_value)
-    test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
-    cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
-
-    resultat = cursor.fetchall()
-        
-
-    while not existe and resultat == 0: # SI le pseudo entré n'existe pas
-        
-        existe = pseudo_existant(username_value)
-        test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
-        cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
-
-        # Recuperation du resultat
-        resultat = cursor.fetchall()
-
-        if len(resultat) == 0:
-            print("Veuillez réessayer ! ")
-            continue # Continuez la boucle while ( ne pas executer la ligne en dessous )
-        
-        print("Connexion Réussie ! :)")
-        break # Permet de stopper la boucle
 
 def inscription():
     global pseudo
@@ -417,7 +395,7 @@ while True:
     if ma_balle.hitbox_balle.colliderect(drapeau.hitbox_trou) and ma_balle.dx**2 < 2.5 and ma_balle.dy**2 < 2.5 :
         print("Bravo", username_value,"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
         #best_score.append(nbr_coups)
-        insert_data_score(pseudo,(nbr_coups-1))
+        insert_data_score(username_value,(nbr_coups-1))
         pygame.display.update()
         pygame.display.quit()
         sys.exit()
