@@ -113,8 +113,8 @@ def handle_inscription_click():
     menu_connexion.show()
     menu_connexion.add.label("Inscription réussie", color=(0, 255, 0))
 
-menu.add.button("Inscription",accept_kwargs=True, function=menu_inscription)
-menu.add.button("Connexion",accept_kwargs=True, function=handle_connexion_click)
+menu.add.button("Inscription",accept_kwargs=True, action=menu_inscription)
+menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
 # Menu "Connexion"
 menu_connexion.add.text_input("Username:", default="")
 menu_connexion.add.text_input("Password:", password=True)
@@ -123,7 +123,6 @@ menu_connexion.add.button("Connexion", accept_kwargs=True, function=handle_conne
 # Menu "Inscription"
 menu_inscription.add.text_input("Username:", default="")
 menu_inscription.add.text_input("Password:", password=True)
-menu_inscription.add.text_input("Email:", default="")
 menu_inscription.add.button("Inscription", accept_kwargs=True, function=handle_inscription_click)
 
 
