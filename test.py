@@ -107,6 +107,7 @@ def handle_inscription_click():
     password = menu_inscription.get_widget("Password").get_value()
     # Enregistrement de l'utilisateur (remplacez ceci par votre logique)
     # ...
+    
 
     # Inscription réussie
     menu_inscription.hide()
@@ -127,17 +128,4 @@ menu_inscription.add.button("Inscription", accept_kwargs=True, function=handle_i
 
 
 
-while True:
-
-    # Handle events
-    events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.QUIT:
-            close_menu()
-        menu.update(events)  # Check for events within the menu
-
-    # Draw the menu
-    menu.draw(display_surface)
-
-    # Update the display
-    pygame.display.flip()
+menu.mainloop(display_surface)

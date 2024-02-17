@@ -1,12 +1,18 @@
+# Importation des modules nécessaires au fonctionnement du programme 
+
 import pygame
 import sys
 import time
 from pygame.locals import *
 from random import randint
 import sqlite3
-import pygame_gui
+import pygame_menu
+from pygame_menu.widgets.core.widget import Widget
+import pygame_menu.widgets
+import pygame_menu._widgetmanager
+import pygame_menu.events as events
+from pygame_menu.events import BACK, CLOSE
 
-# randint(0,10) -> nb aléatoire entre 0 et 10
 
 LARGEUR = 500
 HAUTEUR = 500
@@ -39,6 +45,173 @@ pseudo = ""
 
 
 
+###################################################################################################
+
+#                       IMPORTATION DES MENUS - TEST
+
+#################################################################################################
+
+
+pygame.init()
+
+# Initialisation de la surface d'affichage
+display_surface = pygame.display.set_mode((800, 600))
+def close_menu():
+    pygame.quit()
+
+menu = pygame_menu.Menu(
+    height=300,
+    width=400,
+    title="Mini Golf",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+)
+
+# Create the "Connexion" menu
+menu_connexion = pygame_menu.Menu(
+    height=300,
+    width=400,
+    title="Connexion",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
+)
+
+# Create the "Inscription" menu
+menu_inscription = pygame_menu.Menu(
+    height=300,
+    width=400,
+    title="Inscription",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
+)
+
+
+def pseudo_existant(pseudo):
+    test_pseudo = "SELECT * FROM users WHERE pseudo = :pseudo"
+    cursor.execute(test_pseudo, {"pseudo": pseudo})
+
+    # Recuperation du resultat
+    resultat = cursor.fetchall()
+
+    if len(resultat) == 0:
+        return False
+    else:
+        return True
+
+
+
+def connexion():
+    global username_value
+    global password_value
+    
+    existe = pseudo_existant(username_value)
+    test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
+    cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
+
+    resultat = cursor.fetchall()
+        
+
+    if not existe or resultat == 0: # SI le pseudo entré n'existe pas
+        menu_connexion.mainloop(display_surface)
+        existe = pseudo_existant(username_value)
+        test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
+        cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
+
+        # Recuperation du resultat
+        resultat = cursor.fetchall()
+
+        if len(resultat) == 0:
+            print("Veuillez réessayer ! ")
+            menu_connexion.mainloop(display_surface)
+        else:
+            print("Connexion Réussie ! :)")
+        
+    else:
+        print("Connexion réussie ! :)")
+
+
+
+
+
+username_value = ""
+password_value = ""
+def handle_connexion_click():
+    # Récupération des informations de connexion
+    print(username_value,password_value)
+    # Vérification des informations d'identification (remplacez ceci par votre logique)
+    #existe = pseudo_existant(pseudo)
+    
+    connexion()
+    menu_connexion.close()
+
+    #else:
+        # Echec de la connexion
+        #menu_connexion.add.label("Echec de la connexion", color=(255, 0, 0))
+
+def handle_inscription_click():
+    # Récupération des informations d'inscription
+    print(username_value, password_value)
+    
+    
+
+    # Inscription réussie
+    # menu_inscription.hide()
+    # menu_connexion.show()
+    # menu_connexion.add.label("Inscription réussie", color=(0, 255, 0))
+
+menu.add.button("Inscription",accept_kwargs=True, action=menu_inscription)
+menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
+# Menu "Connexion"
+def username_change(value):
+    global username_value
+    username_value = value
+    return username_value
+
+def password_change(value):
+    global password_value
+    password_value = value
+    return password_value
+
+
+
+menu_connexion.add.text_input("Username:", default="",onchange=username_change)
+menu_connexion.add.text_input("Password:", password=True,onchange=password_change)
+menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexion_click)
+menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
+
+# Menu "Inscription"
+menu_inscription.add.text_input("Username:", default="",onchange=username_change)
+menu_inscription.add.text_input("Password:", password=True,onchange=password_change)
+menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
+menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
+
+
+menu.mainloop(display_surface)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def insert_data_score(pseudo, score):
     # Vérifie si l'utilisateur existe dans la base de données
     cursor.execute("SELECT id,score FROM users WHERE pseudo = :pseudo", {"pseudo": pseudo})
@@ -62,39 +235,22 @@ def insert_data(data):
     conn.commit()
 
 
-def accueil_joueur():
-    accueil = input("Avez vous déjà joué ? ").lower() # Sert à mettre en minuscule .lower()
-    assert accueil in ["oui","non"], "Répondez par oui ou par non"
-    if accueil == "oui":
-        connexion()
-    else:
-        inscription()
-
-
 def connexion():
-    global pseudo
-    pseudo = input("Quel est votre pseudo ? ")
-    existe = pseudo_existant(pseudo)
-    essai = 0
-    while not existe: # SI le pseudo entré n'existe pas
-        print("Nom inconnu")
-        pseudo = input("Quel est votre pseudo ? ")
-        existe = pseudo_existant(pseudo)
-        essai +=1
-        if essai >= 3:
-            demande_inscription = input("Vous voulez vous créez un compte ?").lower()
-            assert demande_inscription in["oui","non"], "Répondez par oui ou par non"
-            if demande_inscription == "oui":
-                inscription()
-                break
-            else:
-                essai = 0
-                continue
-            
-    while True:
-        password = input("Quel est votre mot de passe ? ")
+    global username_value
+    global password_value
+    
+    existe = pseudo_existant(username_value)
+    test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
+    cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
+
+    resultat = cursor.fetchall()
+        
+
+    while not existe and resultat == 0: # SI le pseudo entré n'existe pas
+        
+        existe = pseudo_existant(username_value)
         test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
-        cursor.execute(test_existance, {"pseudo":pseudo, "password":password})
+        cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
 
         # Recuperation du resultat
         resultat = cursor.fetchall()
@@ -223,7 +379,7 @@ else:                                     # EN HAUT A GAUCHE
 
 # CONNEXION / INSCRIPTION JOUEUR
     
-accueil_joueur()
+
 while True:
     print(ma_balle.dx, ma_balle.dy)
     drapeau.draw()
@@ -259,7 +415,7 @@ while True:
                 nbr_coups += 1
 
     if ma_balle.hitbox_balle.colliderect(drapeau.hitbox_trou) and ma_balle.dx**2 < 2.5 and ma_balle.dy**2 < 2.5 :
-        print("Bravo", pseudo,"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
+        print("Bravo", username_value,"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
         #best_score.append(nbr_coups)
         insert_data_score(pseudo,(nbr_coups-1))
         pygame.display.update()
