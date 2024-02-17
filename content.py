@@ -11,6 +11,8 @@ from pygame_menu.widgets.core.widget import Widget
 import pygame_menu.widgets
 import pygame_menu._widgetmanager
 import pygame_menu.events as events
+from pygame_menu.events import BACK, CLOSE
+
 
 LARGEUR = 500
 HAUTEUR = 500
@@ -53,7 +55,7 @@ pseudo = ""
 pygame.init()
 
 # Initialisation de la surface d'affichage
-display_surface = pygame.display.set_mode((400, 300))
+display_surface = pygame.display.set_mode((800, 600))
 def close_menu():
     pygame.quit()
 
@@ -70,6 +72,7 @@ menu_connexion = pygame_menu.Menu(
     width=400,
     title="Connexion",
     theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
 )
 
 # Create the "Inscription" menu
@@ -78,6 +81,7 @@ menu_inscription = pygame_menu.Menu(
     width=400,
     title="Inscription",
     theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
 )
 
 
@@ -125,13 +129,13 @@ def password_change(value):
 menu_connexion.add.text_input("Username:", default="",onchange=username_change)
 menu_connexion.add.text_input("Password:", password=True,onchange=password_change)
 menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexion_click)
-menu_connexion.add.button("Quitter", accept_kwargs=True, action=exit)
+menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
 # Menu "Inscription"
 menu_inscription.add.text_input("Username:", default="",onchange=username_change)
 menu_inscription.add.text_input("Password:", password=True,onchange=password_change)
 menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
-menu_inscription.add.button("Quitter", accept_kwargs=True, action=exit)
+menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
 
 menu.mainloop(display_surface)
