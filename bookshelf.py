@@ -3,7 +3,7 @@
 #                         BIBLIOTHEQUE DES CLASSES - JEU MINI GOLF  |  REALISE PAR KoddaZz
 #                                                               ©KoddaZz
 ##################################################################################################################################################
-
+import pygame
 
 class Balle:     # ici on créé la classe balle
     def __init__(self):
