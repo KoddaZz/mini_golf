@@ -87,15 +87,15 @@ menu_inscription = pygame_menu.Menu(
 username_value = ""
 password_value = ""
 
-def username_change(value):
-    global username_value
-    username_value = value
-    return username_value
+# def username_change(value):
+#     global username_value
+#     username_value = value
+#     return username_value
 
-def password_change(value):
-    global password_value
-    password_value = value
-    return password_value
+# def password_change(value):
+#     global password_value
+#     password_value = value
+#     return password_value
 
 
 
@@ -117,31 +117,24 @@ def connexion():
     global username_value
     global password_value
     
-    existe = pseudo_existant(username_value)
-    test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
-    cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
-
-    resultat = cursor.fetchall()
-        
-
-    if not existe or resultat == 0: # SI le pseudo entré n'existe pas
-        menu_connexion.clear()
-        menu.mainloop(display_surface)
-        existe = pseudo_existant(username_value)
+    existe = pseudo_existant(username_value.get_value())
+    if not existe:
+        username_value.clear()
+        password_value.clear()
+        menu_connexion.add.button("Réessayez ! :)",accept_kwargs=True)
+        menu_connexion.mainloop(display_surface)
+    else:
         test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
-        cursor.execute(test_existance, {"pseudo":username_value, "password":password_value})
+        cursor.execute(test_existance, {"pseudo":username_value.get_value(), "password":password_value.get_value()})
 
-        # Recuperation du resultat
         resultat = cursor.fetchall()
-
-        if len(resultat) == 0:
-            print("Veuillez réessayer ! ")
-            menu.mainloop(display_surface)
+        
+        if len(resultat) == 0: # SI le pseudo entré n'existe pas
+            print("Mauvais mot de passe")
+            password_value.clear()
+            menu_connexion.mainloop(display_surface)
         else:
             print("Connexion Réussie ! :)")
-        
-    else:
-        print("Connexion réussie ! :)")
 
 
 
@@ -150,20 +143,17 @@ def connexion():
 
 def handle_connexion_click():
     # Récupération des informations de connexion
-    print(username_value,password_value)
-    # Vérification des informations d'identification (remplacez ceci par votre logique)
-    #existe = pseudo_existant(pseudo)
+    print(username_value.get_value(), password_value.get_value())
     
     connexion()
     menu_connexion.close()
-
     #else:
         # Echec de la connexion
         #menu_connexion.add.label("Echec de la connexion", color=(255, 0, 0))
 
 def handle_inscription_click():
     # Récupération des informations d'inscription
-    print(username_value, password_value)
+    print(a.get_value(),b.get_value())
     
     
 
@@ -179,14 +169,14 @@ menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
 
 
 
-menu_connexion.add.text_input("Username:", default="",onchange=username_change)
-menu_connexion.add.text_input("Password:", password=True,onchange=password_change)
+username_value = menu_connexion.add.text_input("Username:", default="")
+password_value = menu_connexion.add.text_input("Password:", password=True)
 menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexion_click)
 menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
 # Menu "Inscription"
-menu_inscription.add.text_input("Username:", default="",onchange=username_change)
-menu_inscription.add.text_input("Password:", password=True,onchange=password_change)
+a = menu_inscription.add.text_input("Username:", default="")
+b = menu_inscription.add.text_input("Password:", password=True)
 menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
 menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
