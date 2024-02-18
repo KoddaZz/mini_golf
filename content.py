@@ -42,209 +42,10 @@ CREATE TABLE IF NOT EXISTS users(
 conn.commit()
 
 
-
-
-
-###################################################################################################
-
-#                       IMPORTATION DES MENUS - TEST
-
-#################################################################################################
-
-
 pygame.init()
 
 # Initialisation de la surface d'affichage
 display_surface = pygame.display.set_mode((800, 600))
-def close_menu():
-    pygame.quit()
-
-menu = pygame_menu.Menu(
-    height=300,
-    width=400,
-    title="Mini Golf",
-    theme=pygame_menu.themes.THEME_DEFAULT,
-)
-
-# Create the "Connexion" menu
-menu_connexion = pygame_menu.Menu(
-    height=300,
-    width=400,
-    title="Connexion",
-    theme=pygame_menu.themes.THEME_DEFAULT,
-    onclose=CLOSE,
-)
-
-# Create the "Inscription" menu
-menu_inscription = pygame_menu.Menu(
-    height=300,
-    width=400,
-    title="Inscription",
-    theme=pygame_menu.themes.THEME_DEFAULT,
-    onclose=CLOSE,
-)
-
-username_value = ""
-password_value = ""
-
-new_user = False
-
-# def username_change(value):
-#     global username_value
-#     username_value = value
-#     return username_value
-
-# def password_change(value):
-#     global password_value
-#     password_value = value
-#     return password_value
-
-
-
-def pseudo_existant(pseudo):
-    test_pseudo = "SELECT * FROM users WHERE pseudo = :pseudo"
-    cursor.execute(test_pseudo, {"pseudo": pseudo})
-
-    # Recuperation du resultat
-    resultat = cursor.fetchall()
-
-    if len(resultat) == 0:
-        return False
-    else:
-        return True
-    
-
-def insert_data(data):
-    # Exécute la requête SQL
-    cursor.execute("INSERT INTO users (pseudo, password) VALUES (:pseudo, :password);", data)
-    # Valide les modifications
-    conn.commit()
-
-
-
-
-def connexion():
-    global username_value
-    global password_value
-    global new_user
-    
-    existe = pseudo_existant(username_value.get_value())
-    if not existe:
-        username_value.clear()
-        password_value.clear()
-        menu_connexion.add.button("Réessayez ! :)",accept_kwargs=True)
-        menu_connexion.mainloop(display_surface)
-    else:
-        test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
-        cursor.execute(test_existance, {"pseudo":username_value.get_value(), "password":password_value.get_value()})
-
-        resultat = cursor.fetchall()
-        
-        if len(resultat) == 0: # SI le pseudo entré n'existe pas
-            print("Mauvais mot de passe")
-            password_value.clear()
-            menu_connexion.mainloop(display_surface)
-        else:
-            print("Connexion Réussie ! :)")
-            new_user = False
-            menu_connexion.close()
-
-def inscription():
-    global username_value
-    global password_value
-    global new_user
-
-    username_value = inscription_username_value.get_value()
-    password_value = inscription_password_value.get_value()
-    data = {}
-
-    # Vérifie si le pseudo existe déjà
-    existe = pseudo_existant(username_value)
-    if existe:
-        inscription_username_value.clear()
-        inscription_password_value.clear()
-        username_value = inscription_username_value.get_value()
-        menu_inscription.add.button("Pseudo existant ! :/)",accept_kwargs=True)
-        menu_inscription.mainloop(display_surface)
-    data["pseudo"] = inscription_username_value.get_value()
-    data["password"] = inscription_password_value.get_value()
-
-        # Insert les données dans la base de données
-    insert_data(data)
-    print('Inscription réussie ! :)')
-    new_user = True
-    menu_inscription.close()
-
-
-
-
-
-
-def handle_connexion_click():
-    # Récupération des informations de connexion
-    print(inscription_username_value.get_value(), inscription_password_value.get_value())
-    
-    connexion()
-    
-    #else:
-        # Echec de la connexion
-        #menu_connexion.add.label("Echec de la connexion", color=(255, 0, 0))
-
-def handle_inscription_click():
-    # Récupération des informations d'inscription
-    print(username_value.get_value(),password_value.get_value())
-    inscription()
-    
-
-    # Inscription réussie
-    # menu_inscription.hide()
-    # menu_connexion.show()
-    # menu_connexion.add.label("Inscription réussie", color=(0, 255, 0))
-
-menu.add.button("Inscription",accept_kwargs=True, action=menu_inscription)
-menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
-# Menu "Connexion"
-
-
-
-
-username_value = menu_connexion.add.text_input("Username:", default="")
-password_value = menu_connexion.add.text_input("Password:", password=True)
-menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexion_click)
-menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
-
-# Menu "Inscription"
-inscription_username_value = menu_inscription.add.text_input("Username:", default="")
-inscription_password_value = menu_inscription.add.text_input("Password:", password=True)
-menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
-menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
-
-
-menu.mainloop(display_surface)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def insert_data_score(pseudo, score):
@@ -263,11 +64,6 @@ def insert_data_score(pseudo, score):
 
 
 
-
-
-
-
-
 def pseudo_existant(pseudo):
     test_pseudo = "SELECT * FROM users WHERE pseudo = :pseudo"
     cursor.execute(test_pseudo, {"pseudo": pseudo})
@@ -280,8 +76,6 @@ def pseudo_existant(pseudo):
     else:
         return True
     
-
-
 
 class Balle:     # ici on créé la classe balle
     def __init__(self):
@@ -340,6 +134,198 @@ def obtenir_direction_vers_point(point_x, point_y):
 
 ma_balle = Balle()
 drapeau = LePuits()
+
+
+
+
+def close_menu():
+    pygame.quit()
+
+menu = pygame_menu.Menu(
+    height=600,
+    width=800,
+    title="Mini Golf",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+)
+
+# Create the "Connexion" menu
+menu_connexion = pygame_menu.Menu(
+    height=600,
+    width=800,
+    title="Connexion",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
+)
+
+# Create the "Inscription" menu
+menu_inscription = pygame_menu.Menu(
+    height=600,
+    width=800,
+    title="Inscription",
+    theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
+)
+
+menu_parcours = pygame_menu.Menu(
+    height=600,
+    width=800,
+    title='Parcours',
+    theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
+)
+
+username_value = ""
+password_value = ""
+
+new_user = False
+
+
+def pseudo_existant(pseudo):
+    test_pseudo = "SELECT * FROM users WHERE pseudo = :pseudo"
+    cursor.execute(test_pseudo, {"pseudo": pseudo})
+
+    # Recuperation du resultat
+    resultat = cursor.fetchall()
+
+    if len(resultat) == 0:
+        return False
+    else:
+        return True
+    
+
+def insert_data(data):
+    # Exécute la requête SQL
+    cursor.execute("INSERT INTO users (pseudo, password) VALUES (:pseudo, :password);", data)
+    # Valide les modifications
+    conn.commit()
+
+
+
+
+def connexion():
+    global username_value
+    global password_value
+    global new_user
+    
+    existe = pseudo_existant(username_value.get_value())
+    if not existe:
+        username_value.clear()
+        password_value.clear()
+        menu_connexion.add.button("Réessayez ! :)",accept_kwargs=True)
+        menu_connexion.mainloop(display_surface)
+    else:
+        test_existance = "SELECT * FROM users WHERE pseudo = :pseudo AND password = :password"
+        cursor.execute(test_existance, {"pseudo":username_value.get_value(), "password":password_value.get_value()})
+
+        resultat = cursor.fetchall()
+        
+        if len(resultat) == 0: # SI le pseudo entré n'existe pas
+            print("Mauvais mot de passe")
+            password_value.clear()
+            menu_connexion.mainloop(display_surface)
+        else:
+            print("Connexion Réussie ! :)")
+            new_user = False
+            menu_connexion.close()
+            menu_parcours.mainloop(display_surface)
+
+def inscription():
+    global username_value
+    global password_value
+    global new_user
+
+    username_value = inscription_username_value.get_value()
+    password_value = inscription_password_value.get_value()
+    data = {}
+
+    # Vérifie si le pseudo existe déjà
+    existe = pseudo_existant(username_value)
+    if existe:
+        inscription_username_value.clear()
+        inscription_password_value.clear()
+        menu_inscription.add.button("Pseudo existant !",accept_kwargs=True)
+        menu_inscription.mainloop(display_surface)
+    data["pseudo"] = inscription_username_value.get_value()
+    data["password"] = inscription_password_value.get_value()
+
+        # Insert les données dans la base de données
+    insert_data(data)
+    print('Inscription réussie ! :)')
+    new_user = True
+    menu_inscription.close()
+    menu_parcours.mainloop(display_surface)
+
+
+def parcours():
+    global choix_parcours
+    if choix_parcours.get_value() not in ['1','2','3']:
+        choix_parcours.clear()
+        menu_parcours.add.button("Inexistant !")
+        menu_parcours.mainloop(display_surface)
+    else:
+        if choix_parcours.get_value() == '1':
+            drapeau.x2 = LARGEUR / 2
+            drapeau.y2 = HAUTEUR / 10
+            menu_parcours.close()
+        elif choix_parcours.get_value() =='2':
+            drapeau.x2 = LARGEUR / 2
+            drapeau.y2 = HAUTEUR / 2
+            menu_parcours.close()
+        else:
+            drapeau.x2 = LARGEUR * 0.90
+            drapeau.y2 = HAUTEUR * 0.10
+            menu_parcours.close()
+    
+
+
+
+
+
+def handle_connexion_click():
+    # Récupération des informations de connexion
+    print(inscription_username_value.get_value(), inscription_password_value.get_value())
+    
+    connexion()
+    
+    #else:
+        # Echec de la connexion
+        #menu_connexion.add.label("Echec de la connexion", color=(255, 0, 0))
+
+def handle_inscription_click():
+    # Récupération des informations d'inscription
+    print(username_value.get_value(),password_value.get_value())
+    inscription()
+    
+
+    # Inscription réussie
+    # menu_inscription.hide()
+    # menu_connexion.show()
+    # menu_connexion.add.label("Inscription réussie", color=(0, 255, 0))
+
+menu.add.button("Inscription",accept_kwargs=True, action=menu_inscription)
+menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
+# Menu "Connexion"
+
+
+
+
+username_value = menu_connexion.add.text_input("Username:", default="")
+password_value = menu_connexion.add.text_input("Password:", password=True)
+menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexion_click)
+menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
+
+# Menu "Inscription"
+inscription_username_value = menu_inscription.add.text_input("Username:", default="")
+inscription_password_value = menu_inscription.add.text_input("Password:", password=True)
+menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
+menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
+
+# Menu Parcours
+choix_parcours = menu_parcours.add.text_input("Parcours :",default="")
+menu_parcours.add.button("Jouer !", accept_kwargs=True, action=parcours)
+menu.mainloop(display_surface)
+
+# Idée à compléter car il faut différents parcours avec différents obstacles ( #TO DO MAJ )
 fenetre.fill([51 ,153 , 0])
 obstacle1 = Obstacles(200, 200, 20)
 obstacle2 = Obstacles(300, 300, 30)
@@ -348,20 +334,7 @@ obstacles = [obstacle1,obstacle2]
 
 for obstacle in obstacles:
         obstacle.draw()
-
-# Idée à compléter car il faut différents parcours avec différents obstacles ( #TO DO MAJ )
-ask_player_option = int(input("Quelle option choisissez vous ?"))
-assert ask_player_option in [1,2,3], "Il n'y a que 3 options pour le moment"
-if ask_player_option == 1: # EN HAUT AU MILIEU
-    drapeau.x2 = LARGEUR / 2
-    drapeau.y2 = HAUTEUR / 10
-elif ask_player_option == 2:              # AU MILIEU
-    drapeau.x2 = LARGEUR / 2
-    drapeau.y2 = HAUTEUR / 2
-else:                                     # EN HAUT A GAUCHE
-    drapeau.x2 = LARGEUR * 0.90
-    drapeau.y2 = HAUTEUR * 0.10
-
+#
 # CONNEXION / INSCRIPTION JOUEUR
     
 
