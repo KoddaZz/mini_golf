@@ -87,6 +87,8 @@ menu_inscription = pygame_menu.Menu(
 username_value = ""
 password_value = ""
 
+new_user = False
+
 # def username_change(value):
 #     global username_value
 #     username_value = value
@@ -110,12 +112,21 @@ def pseudo_existant(pseudo):
         return False
     else:
         return True
+    
+
+def insert_data(data):
+    # Exécute la requête SQL
+    cursor.execute("INSERT INTO users (pseudo, password) VALUES (:pseudo, :password);", data)
+    # Valide les modifications
+    conn.commit()
+
 
 
 
 def connexion():
     global username_value
     global password_value
+    global new_user
     
     existe = pseudo_existant(username_value.get_value())
     if not existe:
@@ -135,6 +146,34 @@ def connexion():
             menu_connexion.mainloop(display_surface)
         else:
             print("Connexion Réussie ! :)")
+            new_user = False
+            menu_connexion.close()
+
+def inscription():
+    global username_value
+    global password_value
+    global new_user
+
+    username_value = inscription_username_value.get_value()
+    password_value = inscription_password_value.get_value()
+    data = {}
+
+    # Vérifie si le pseudo existe déjà
+    existe = pseudo_existant(username_value)
+    if existe:
+        inscription_username_value.clear()
+        inscription_password_value.clear()
+        username_value = inscription_username_value.get_value()
+        menu_inscription.add.button("Pseudo existant ! :/)",accept_kwargs=True)
+        menu_inscription.mainloop(display_surface)
+    data["pseudo"] = inscription_username_value.get_value()
+    data["password"] = inscription_password_value.get_value()
+
+        # Insert les données dans la base de données
+    insert_data(data)
+    print('Inscription réussie ! :)')
+    new_user = True
+    menu_inscription.close()
 
 
 
@@ -143,18 +182,18 @@ def connexion():
 
 def handle_connexion_click():
     # Récupération des informations de connexion
-    print(username_value.get_value(), password_value.get_value())
+    print(inscription_username_value.get_value(), inscription_password_value.get_value())
     
     connexion()
-    menu_connexion.close()
+    
     #else:
         # Echec de la connexion
         #menu_connexion.add.label("Echec de la connexion", color=(255, 0, 0))
 
 def handle_inscription_click():
     # Récupération des informations d'inscription
-    print(a.get_value(),b.get_value())
-    
+    print(username_value.get_value(),password_value.get_value())
+    inscription()
     
 
     # Inscription réussie
@@ -175,8 +214,8 @@ menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexi
 menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
 # Menu "Inscription"
-a = menu_inscription.add.text_input("Username:", default="")
-b = menu_inscription.add.text_input("Password:", password=True)
+inscription_username_value = menu_inscription.add.text_input("Username:", default="")
+inscription_password_value = menu_inscription.add.text_input("Password:", password=True)
 menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
 menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
@@ -224,30 +263,8 @@ def insert_data_score(pseudo, score):
 
 
 
-def insert_data(data):
-    # Exécute la requête SQL
-    cursor.execute("INSERT INTO users (pseudo, password) VALUES (:pseudo, :password);", data)
-    # Valide les modifications
-    conn.commit()
 
-def inscription():
-    global pseudo
-    data = {}
-    pseudo = input("Quel est votre pseudo ? ")
 
-    # Vérifie si le pseudo existe déjà
-    existe = pseudo_existant(pseudo)
-    while existe:
-        print("Ce pseudo est déjà utilisé veuillez en réutiliser un autre ! ")
-        pseudo = input("Quel est votre pseudo ? ")
-        existe = pseudo_existant(pseudo)
-    data["pseudo"] = pseudo
-    password = input("Entrez votre mot de passe ! ")
-    data["password"] = password
-
-        # Insert les données dans la base de données
-    insert_data(data)
-    return True
 
 
 
@@ -383,9 +400,13 @@ while True:
                 nbr_coups += 1
 
     if ma_balle.hitbox_balle.colliderect(drapeau.hitbox_trou) and ma_balle.dx**2 < 2.5 and ma_balle.dy**2 < 2.5 :
-        print("Bravo", username_value,"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
+        if new_user:
+            print("Bravo", inscription_username_value.get_value(),"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
         #best_score.append(nbr_coups)
-        insert_data_score(username_value,(nbr_coups-1))
+            insert_data_score(inscription_username_value.get_value(),(nbr_coups-1))
+        else:
+            print("Bravo", username_value.get_value(),"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
+            insert_data_score(username_value.get_value(),(nbr_coups-1))
         pygame.display.update()
         pygame.display.quit()
         sys.exit()
