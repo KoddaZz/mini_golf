@@ -14,15 +14,14 @@ import pygame_menu.events as events
 from pygame_menu.events import BACK, CLOSE
 
 
-LARGEUR = 500
-HAUTEUR = 500
+DIMENSION = 500
 RAYON = 10
 trou = 15
 touche_paroi = 0
 nbr_coups = 1
 
 pygame.display.init()
-fenetre = pygame.display.set_mode((LARGEUR, HAUTEUR))
+fenetre = pygame.display.set_mode((DIMENSION, DIMENSION))
 fenetre.fill([0, 0, 0])
 
 conn = sqlite3.connect('data.db')
@@ -45,7 +44,7 @@ conn.commit()
 pygame.init()
 
 # Initialisation de la surface d'affichage
-display_surface = pygame.display.set_mode((800, 600))
+display_surface = pygame.display.set_mode((DIMENSION, DIMENSION))
 
 
 def insert_data_score(pseudo, score):
@@ -79,8 +78,8 @@ def pseudo_existant(pseudo):
 
 class Balle:     # ici on créé la classe balle
     def __init__(self):
-        self.x = randint(RAYON, LARGEUR-RAYON)
-        self.y = randint(RAYON, HAUTEUR-RAYON)
+        self.x = randint(RAYON, DIMENSION-RAYON)
+        self.y = randint(RAYON, DIMENSION-RAYON)
         self.dx = 0
         self.dy = 0
         self.couleur = (255, 255, 255)
@@ -93,9 +92,9 @@ class Balle:     # ici on créé la classe balle
         self.x += self.dx * self.coeff_frottement
         self.y += self.dy * self.coeff_frottement
 
-        if self.y < self.taille or self.y > HAUTEUR - self.taille:
+        if self.y < self.taille or self.y > DIMENSION - self.taille:
             self.dy = -self.dy
-        if self.x < self.taille or self.x > LARGEUR - self.taille:
+        if self.x < self.taille or self.x > DIMENSION - self.taille:
             self.dx = -self.dx
         pygame.draw.circle(fenetre, self.couleur, (self.x, self.y), self.taille)
 
@@ -142,16 +141,16 @@ def close_menu():
     pygame.quit()
 
 menu = pygame_menu.Menu(
-    height=600,
-    width=800,
+    height=DIMENSION,
+    width=DIMENSION,
     title="Mini Golf",
     theme=pygame_menu.themes.THEME_DEFAULT,
 )
 
 # Create the "Connexion" menu
 menu_connexion = pygame_menu.Menu(
-    height=600,
-    width=800,
+    height=DIMENSION,
+    width=DIMENSION,
     title="Connexion",
     theme=pygame_menu.themes.THEME_DEFAULT,
     onclose=CLOSE,
@@ -159,16 +158,16 @@ menu_connexion = pygame_menu.Menu(
 
 # Create the "Inscription" menu
 menu_inscription = pygame_menu.Menu(
-    height=600,
-    width=800,
+    height=DIMENSION,
+    width=DIMENSION,
     title="Inscription",
     theme=pygame_menu.themes.THEME_DEFAULT,
     onclose=CLOSE,
 )
 
 menu_parcours = pygame_menu.Menu(
-    height=600,
-    width=800,
+    height=DIMENSION,
+    width=DIMENSION,
     title='Parcours',
     theme=pygame_menu.themes.THEME_DEFAULT,
     onclose=CLOSE,
@@ -264,16 +263,16 @@ def parcours():
         menu_parcours.mainloop(display_surface)
     else:
         if choix_parcours.get_value() == '1':
-            drapeau.x2 = LARGEUR / 2
-            drapeau.y2 = HAUTEUR / 10
+            drapeau.x2 = DIMENSION / 2
+            drapeau.y2 = DIMENSION / 10
             menu_parcours.close()
         elif choix_parcours.get_value() =='2':
-            drapeau.x2 = LARGEUR / 2
-            drapeau.y2 = HAUTEUR / 2
+            drapeau.x2 = DIMENSION / 2
+            drapeau.y2 = DIMENSION / 2
             menu_parcours.close()
         else:
-            drapeau.x2 = LARGEUR * 0.90
-            drapeau.y2 = HAUTEUR * 0.10
+            drapeau.x2 = DIMENSION * 0.90
+            drapeau.y2 = DIMENSION * 0.10
             menu_parcours.close()
     
 
@@ -339,7 +338,6 @@ for obstacle in obstacles:
     
 
 while True:
-    print(ma_balle.dx, ma_balle.dy)
     drapeau.draw()
 
     for obstacle in obstacles:
@@ -359,9 +357,9 @@ while True:
             ma_balle.dx, ma_balle.dy = obtenir_direction_vers_point(point_x, point_y)
             nbr_coups += 1
 
-    if ma_balle.y < ma_balle.taille or ma_balle.y > HAUTEUR - ma_balle.taille:
+    if ma_balle.y < ma_balle.taille or ma_balle.y > DIMENSION - ma_balle.taille:
             touche_paroi +=1
-    if ma_balle.x < ma_balle.taille or ma_balle.x > LARGEUR - ma_balle.taille:
+    if ma_balle.x < ma_balle.taille or ma_balle.x > DIMENSION - ma_balle.taille:
             touche_paroi +=1
 
     speed_magnitude = (ma_balle.dx**2 + ma_balle.dy**2)**0.5  #calcule la magnitude de la vitesse
