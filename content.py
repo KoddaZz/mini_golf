@@ -318,13 +318,13 @@ menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
 
 username_value = menu_connexion.add.text_input("Username:", default="")
 password_value = menu_connexion.add.text_input("Password:", password=True)
-menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexion_click)
+menu_connexion.add.button("Connexion", accept_kwargs=True, action=connexion)
 menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
 # Menu "Inscription"
 inscription_username_value = menu_inscription.add.text_input("Username:", default="")
 inscription_password_value = menu_inscription.add.text_input("Password:", password=True)
-menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
+menu_inscription.add.button("Inscription", accept_kwargs=True, action=inscription)
 menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
 # Menu Parcours
