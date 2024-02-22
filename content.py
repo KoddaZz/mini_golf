@@ -173,6 +173,14 @@ menu_parcours = pygame_menu.Menu(
     onclose=CLOSE,
 )
 
+menu_de_fin = pygame_menu.Menu(
+    height=DIMENSION,
+    width=DIMENSION,
+    title='Menu de Fin',
+    theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
+)
+
 username_value = ""
 password_value = ""
 
@@ -323,6 +331,12 @@ menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 choix_parcours = menu_parcours.add.text_input("Parcours :",default="")
 menu_parcours.add.button("Jouer !", accept_kwargs=True, action=parcours)
 menu.mainloop(display_surface)
+8
+
+#Menu de Fin
+
+
+
 
 # Idée à compléter car il faut différents parcours avec différents obstacles ( #TO DO MAJ )
 fenetre.fill([51 ,153 , 0])
@@ -371,13 +385,21 @@ while True:
                 nbr_coups += 1
 
     if ma_balle.hitbox_balle.colliderect(drapeau.hitbox_trou) and ma_balle.dx**2 < 2.5 and ma_balle.dy**2 < 2.5 :
+        menu_de_fin.add.button( f"Score : {nbr_coups-1}",accept_kwargs=True)
+        menu_de_fin.add.button( f"Paroi touchée : {touche_paroi}",accept_kwargs=True)
+        menu_de_fin.add.button( "Rejouez ?",accept_kwargs=True)
+
         if new_user:
             print("Bravo", inscription_username_value.get_value(),"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
         #best_score.append(nbr_coups)
             insert_data_score(inscription_username_value.get_value(),(nbr_coups-1))
+            menu_de_fin.mainloop(display_surface)
+            menu_de_fin.close()
         else:
             print("Bravo", username_value.get_value(),"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
             insert_data_score(username_value.get_value(),(nbr_coups-1))
+            menu_de_fin.mainloop(display_surface)
+            menu_de_fin.close()
         pygame.display.update()
         pygame.display.quit()
         sys.exit()
