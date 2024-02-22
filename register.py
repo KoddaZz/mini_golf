@@ -10,7 +10,7 @@ from pygame_menu.events import CLOSE
 import sqlite3
 
 import utilities_db as db
-from BookShelf import hole as drapeau
+
 
 conn = sqlite3.connect('data.db')
 cursor = conn.cursor()
@@ -28,15 +28,6 @@ menu_inscription = pygame_menu.Menu(
     height=DIMENSION,
     width=DIMENSION,
     title="Inscription",
-    theme=pygame_menu.themes.THEME_DEFAULT,
-    onclose=CLOSE,
-)
-
-#Menu Parcours
-menu_parcours = pygame_menu.Menu(
-    height=DIMENSION,
-    width=DIMENSION,
-    title='Parcours',
     theme=pygame_menu.themes.THEME_DEFAULT,
     onclose=CLOSE,
 )
@@ -67,35 +58,12 @@ def inscription():
     print('Inscription réussie ! :)')
     new_user = True
     menu_inscription.close()
-    menu_parcours.mainloop(display_surface)
+    
 
-#Fonction qui gère quel parcours sur lequel le joueur veut jouer
-def parcours():
-    global choix_parcours
-    if choix_parcours.get_value() not in ['1','2','3']:
-        choix_parcours.clear()
-        menu_parcours.add.button("Inexistant !")
-        menu_parcours.mainloop(display_surface)
-    else:
-        if choix_parcours.get_value() == '1':
-            drapeau.x2 = DIMENSION / 2
-            drapeau.y2 = DIMENSION / 10
-            menu_parcours.close()
-        elif choix_parcours.get_value() =='2':
-            drapeau.x2 = DIMENSION / 2
-            drapeau.y2 = DIMENSION / 2
-            menu_parcours.close()
-        else:
-            drapeau.x2 = DIMENSION * 0.90
-            drapeau.y2 = DIMENSION * 0.10
-            menu_parcours.close()
+
 
 #Gestion Menu Inscritpion
 inscription_username_value = menu_inscription.add.text_input("Username:", default="")
 inscription_password_value = menu_inscription.add.text_input("Password:", password=True)
 menu_inscription.add.button("Inscription", accept_kwargs=True, action=inscription)
 menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
-
-#Gestion Menu Parcours
-choix_parcours = menu_parcours.add.text_input("Parcours :",default="")
-menu_parcours.add.button("Jouer !", accept_kwargs=True, action=parcours)

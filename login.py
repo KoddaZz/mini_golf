@@ -10,7 +10,6 @@ from pygame_menu.events import CLOSE
 import sqlite3
 
 from utilities_db import pseudo_existant
-from BookShelf import hole as drapeau
 
 conn = sqlite3.connect('data.db')
 cursor = conn.cursor()
@@ -32,21 +31,15 @@ menu_connexion = pygame_menu.Menu(
     onclose=CLOSE,
 )
 
-# Création du menu "Parcours"
-menu_parcours = pygame_menu.Menu(
-    height=DIMENSION,
-    width=DIMENSION,
-    title='Parcours',
-    theme=pygame_menu.themes.THEME_DEFAULT,
-    onclose=CLOSE,
-)
 
+
+#Fonction qui gère la connexion du joueur
 def connexion():
     global username_value
     global password_value
     
     existe = pseudo_existant(username_value.get_value())
-    if not existe:
+    if not existe: #Si le pseudo est inconnu alors le joueur n'existe pas, tant que le pseudo n'est pas connu de la BD, cela redemande le pseudo
         username_value.clear()
         password_value.clear()
         menu_connexion.add.button("Réessayez ! :)",accept_kwargs=True)
@@ -64,28 +57,9 @@ def connexion():
         else:
             print("Connexion Réussie ! :)")
             menu_connexion.close()
-            menu_parcours.mainloop(display_surface)
+            
 
-#Fonction qui gère quel parcours sur lequel le joueur veut jouer
-def parcours():
-    global choix_parcours
-    if choix_parcours.get_value() not in ['1','2','3']:
-        choix_parcours.clear()
-        menu_parcours.add.button("Inexistant !")
-        menu_parcours.mainloop(display_surface)
-    else:
-        if choix_parcours.get_value() == '1':
-            drapeau.x2 = DIMENSION / 2
-            drapeau.y2 = DIMENSION / 10
-            menu_parcours.close()
-        elif choix_parcours.get_value() =='2':
-            drapeau.x2 = DIMENSION / 2
-            drapeau.y2 = DIMENSION / 2
-            menu_parcours.close()
-        else:
-            drapeau.x2 = DIMENSION * 0.90
-            drapeau.y2 = DIMENSION * 0.10
-            menu_parcours.close()
+
 
 
 #Gestion du menu "Connexion"
@@ -94,6 +68,3 @@ password_value = menu_connexion.add.text_input("Password:", password=True)
 menu_connexion.add.button("Connexion", accept_kwargs=True, action=connexion)
 menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
-#Gestion Menu Parcours
-choix_parcours = menu_parcours.add.text_input("Parcours :",default="")
-menu_parcours.add.button("Jouer !", accept_kwargs=True, action=parcours)

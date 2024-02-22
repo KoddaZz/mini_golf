@@ -18,6 +18,7 @@ from BookShelf import ball,barriers,hole
 import register
 import login
 import utilities_db
+#
 
 #Initalisation des scores
 touche_paroi = 0
@@ -38,6 +39,29 @@ def obtenir_direction_vers_point(point_x, point_y):
         dx /= norme
         dy /= norme
     return dx*norme*0.01, dy*norme*0.01
+
+# Fonction qui sert à determiner le parcours choisis par l'utilisateur
+def parcours():
+    global choix_parcours
+    if choix_parcours.get_value() not in ['1','2','3']:
+        choix_parcours.clear()
+        menu_parcours.add.button("Inexistant !")
+        menu_parcours.mainloop(display_surface)
+    else:
+        if choix_parcours.get_value() == '1':
+            drapeau.x2 = DIMENSION / 2
+            drapeau.y2 = DIMENSION / 10
+            menu_parcours.close()
+        elif choix_parcours.get_value() =='2':
+            drapeau.x2 = DIMENSION / 2
+            drapeau.y2 = DIMENSION / 2
+            menu_parcours.close()
+        else:
+            drapeau.x2 = DIMENSION * 0.90
+            drapeau.y2 = DIMENSION * 0.10
+            menu_parcours.close()
+
+#Fonction qui gère quel parcours sur lequel le joueur veut jouer
 
 
 
@@ -61,6 +85,15 @@ menu = pygame_menu.Menu(
     theme=pygame_menu.themes.THEME_DEFAULT,
 )
 
+#Menu Parcours
+menu_parcours = pygame_menu.Menu(
+    height=DIMENSION,
+    width=DIMENSION,
+    title='Parcours',
+    theme=pygame_menu.themes.THEME_DEFAULT,
+    onclose=CLOSE,
+)
+
 #Menu du Fin du Jeu
 menu_de_fin = pygame_menu.Menu(
     height=DIMENSION,
@@ -76,12 +109,20 @@ menu.add.button("Connexion",accept_kwargs=True, action=login.menu_connexion)
 
 menu.mainloop(display_surface)
 
+# Gestion du menu "Parcours" (bouton + zone de txt)
+choix_parcours = menu_parcours.add.text_input("Parcours :",default="")
+menu_parcours.add.button("Jouer !", accept_kwargs=True, action=parcours)
 
-
+menu_parcours.mainloop(display_surface)
 fenetre = pygame.display.set_mode((DIMENSION, DIMENSION))
 fenetre.fill([51 ,153 , 0])
+
+
+
+
 #Boucle qui fait tourner le jeu
 while True:
+    print(drapeau.x2, drapeau.y2)
     drapeau.draw()
 
     for obstacle in obstacles:
