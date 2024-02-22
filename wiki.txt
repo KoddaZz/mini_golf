@@ -1,0 +1,33 @@
+##################################################################################################################################################
+#
+#                         GUIDE D'UTILISATION - JEU MINI GOLF  |  REALISE PAR KoddaZz
+#                                                               ©KoddaZz
+##################################################################################################################################################
+
+Bienvenue sur le guide d'utilisation du jeu de "Mini Golf" développé par KoddaZz
+
+[SPOILER ALERT] INFO : Ce jeu a été réalisé dans le cadre d'un projet pour les cours !
+
+=> Comment lancer le jeu ?
+
+1. Installez tout les fichiers ici, ils sont tous nécessaire au bon fonctionnement du jeu, glissez les dans un même dossier ( nécessaire )
+
+2. Veuillez si vous ne l'avez pas déjà fait installer les bibliothèques suivantes : pygame et pygame_menu
+
+3. Dernière étape, accèdez au fichier 'main.py' puis lancez le ! Bon jeu !
+
+PS : Verifiez bien que vous avez la dernière version de Python ( [3.12.2] recommandée )
+
+Un problème ? Une idée ? 
+> Contactez moi ! 
+
+Pour plus de questions veuillez me contacter depuis mon github :
+> https://github.com/KoddaZz (moyen de communication à venir !)
+
+
+PSS : Pour ceux qui se poseraient la question de "Pourquoi en l'avoir codé en Python ?"
+
+> Tout simplement car il s'agit de mon premier projet, et que je l'améliore de temps en temps donc soyez attentifs ;)
+
+
+Vous pouvez bien évidemment vous amuser à modifier le jeu étant donné qu'il est en OPEN-SOURCE, et si vous avez des idées d'améliorations, faites les !
