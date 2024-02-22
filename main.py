@@ -46,7 +46,6 @@ for obstacle in obstacles:
         obstacle.draw()
 
 #Menu Principal du jeu
-
 menu = pygame_menu.Menu(
     height=DIMENSION,
     width=DIMENSION,
@@ -54,6 +53,7 @@ menu = pygame_menu.Menu(
     theme=pygame_menu.themes.THEME_DEFAULT,
 )
 
+#Menu du Fin du Jeu
 menu_de_fin = pygame_menu.Menu(
     height=DIMENSION,
     width=DIMENSION,
@@ -62,7 +62,7 @@ menu_de_fin = pygame_menu.Menu(
     onclose=CLOSE,
 )
 
-
+#Gesion du Menu Principal
 menu.add.button("Inscription",accept_kwargs=True, action=register.menu_inscription)
 menu.add.button("Connexion",accept_kwargs=True, action=login.menu_connexion)
 
@@ -78,7 +78,7 @@ while True:
 
     for obstacle in obstacles:
         obstacle.draw()
-        if ma_balle.hitbox_balle.colliderect(obstacle.hitbox_obstacle):
+        if ma_balle.hitbox_balle.colliderect(obstacle.hitbox_obstacle): # Gestion des évènements avc les obstacles
             ma_balle.dx = -ma_balle.dx
             ma_balle.dy = -ma_balle.dy
 
