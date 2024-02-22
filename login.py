@@ -44,7 +44,6 @@ menu_parcours = pygame_menu.Menu(
 def connexion():
     global username_value
     global password_value
-    global new_user
     
     existe = pseudo_existant(username_value.get_value())
     if not existe:
@@ -64,7 +63,6 @@ def connexion():
             menu_connexion.mainloop(display_surface)
         else:
             print("Connexion Réussie ! :)")
-            new_user = False
             menu_connexion.close()
             menu_parcours.mainloop(display_surface)
 

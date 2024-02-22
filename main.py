@@ -6,6 +6,7 @@ import pygame_menu
 from pygame_menu.events import CLOSE
 
 from BookShelf import ball,barriers,hole
+
 import register
 import login
 import utilities_db
@@ -14,7 +15,6 @@ import utilities_db
 touche_paroi = 0
 nbr_coups = 1
 DIMENSION = 500
-new_user = False #-> Permet de faire la différence entre un nouvel utilisateur ou un ancien ( connexion / inscription )
 
 display_surface = pygame.display.set_mode((DIMENSION, DIMENSION))
 pygame.init()
@@ -111,7 +111,7 @@ while True:
         menu_de_fin.add.button( f"Paroi touchée : {touche_paroi}",accept_kwargs=True)
         menu_de_fin.add.button( "Rejouez ?",accept_kwargs=True)
 
-        if new_user:
+        if register.new_user:
             print("Bravo", register.inscription_username_value.get_value(),"! Vous avez réussi en touchant la paroi  " + str(touche_paroi) + " fois ! Et en " + str(nbr_coups-1) + " coups ! BEAU SWING !")
         #best_score.append(nbr_coups)
             utilities_db.insert_data_score(register.inscription_username_value.get_value(),(nbr_coups-1))

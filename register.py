@@ -17,6 +17,7 @@ cursor = conn.cursor()
 
 username_value =""
 password_value =""
+new_user = False #-> Valeur par défaut
 DIMENSION = 500
 display_surface = pygame.display.set_mode((DIMENSION, DIMENSION))
 pygame.init()
