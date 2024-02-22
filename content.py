@@ -288,26 +288,7 @@ def parcours():
 
 
 
-def handle_connexion_click():
-    # Récupération des informations de connexion
-    print(inscription_username_value.get_value(), inscription_password_value.get_value())
-    
-    connexion()
-    
-    #else:
-        # Echec de la connexion
-        #menu_connexion.add.label("Echec de la connexion", color=(255, 0, 0))
 
-def handle_inscription_click():
-    # Récupération des informations d'inscription
-    print(username_value.get_value(),password_value.get_value())
-    inscription()
-    
-
-    # Inscription réussie
-    # menu_inscription.hide()
-    # menu_connexion.show()
-    # menu_connexion.add.label("Inscription réussie", color=(0, 255, 0))
 
 menu.add.button("Inscription",accept_kwargs=True, action=menu_inscription)
 menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
@@ -318,13 +299,13 @@ menu.add.button("Connexion",accept_kwargs=True, action=menu_connexion)
 
 username_value = menu_connexion.add.text_input("Username:", default="")
 password_value = menu_connexion.add.text_input("Password:", password=True)
-menu_connexion.add.button("Connexion", accept_kwargs=True, action=handle_connexion_click)
+menu_connexion.add.button("Connexion", accept_kwargs=True, action=connexion)
 menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
 # Menu "Inscription"
 inscription_username_value = menu_inscription.add.text_input("Username:", default="")
 inscription_password_value = menu_inscription.add.text_input("Password:", password=True)
-menu_inscription.add.button("Inscription", accept_kwargs=True, action=handle_inscription_click)
+menu_inscription.add.button("Inscription", accept_kwargs=True, action=inscription)
 menu_inscription.add.button("Quitter", accept_kwargs=True, action=CLOSE)
 
 # Menu Parcours
@@ -332,6 +313,12 @@ choix_parcours = menu_parcours.add.text_input("Parcours :",default="")
 menu_parcours.add.button("Jouer !", accept_kwargs=True, action=parcours)
 menu.mainloop(display_surface)
 8
+
+#Menu de Fin
+
+
+
+
 
 #Menu de Fin
 
