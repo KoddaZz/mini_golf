@@ -10,6 +10,7 @@ from pygame_menu.events import CLOSE
 import sqlite3
 
 from utilities_db import pseudo_existant
+from BookShelf import hole as drapeau
 
 conn = sqlite3.connect('data.db')
 cursor = conn.cursor()
@@ -20,6 +21,7 @@ password_value =""
 DIMENSION = 500
 
 display_surface = pygame.display.set_mode((DIMENSION, DIMENSION))
+pygame.init()
 
 # Création du menu "Connexion"
 menu_connexion = pygame_menu.Menu(
@@ -66,9 +68,34 @@ def connexion():
             menu_connexion.close()
             menu_parcours.mainloop(display_surface)
 
+#Fonction qui gère quel parcours sur lequel le joueur veut jouer
+def parcours():
+    global choix_parcours
+    if choix_parcours.get_value() not in ['1','2','3']:
+        choix_parcours.clear()
+        menu_parcours.add.button("Inexistant !")
+        menu_parcours.mainloop(display_surface)
+    else:
+        if choix_parcours.get_value() == '1':
+            drapeau.x2 = DIMENSION / 2
+            drapeau.y2 = DIMENSION / 10
+            menu_parcours.close()
+        elif choix_parcours.get_value() =='2':
+            drapeau.x2 = DIMENSION / 2
+            drapeau.y2 = DIMENSION / 2
+            menu_parcours.close()
+        else:
+            drapeau.x2 = DIMENSION * 0.90
+            drapeau.y2 = DIMENSION * 0.10
+            menu_parcours.close()
+
 
 #Gestion du menu "Connexion"
 username_value = menu_connexion.add.text_input("Username:", default="")
 password_value = menu_connexion.add.text_input("Password:", password=True)
 menu_connexion.add.button("Connexion", accept_kwargs=True, action=connexion)
 menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
+
+#Gestion Menu Parcours
+choix_parcours = menu_parcours.add.text_input("Parcours :",default="")
+menu_parcours.add.button("Jouer !", accept_kwargs=True, action=parcours)
