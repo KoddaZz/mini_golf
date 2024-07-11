@@ -6,10 +6,11 @@
 
 
 import pygame
-DIMENSION = 500
+LONGUEUR = 1000
+LARGEUR = 500
 trou = 15
 
-fenetre = pygame.display.set_mode((DIMENSION, DIMENSION))
+fenetre = pygame.display.set_mode((LONGUEUR, LARGEUR))
 fenetre.fill([0, 0, 0])
 
 class LePuits:

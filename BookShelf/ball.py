@@ -9,16 +9,17 @@ import pygame
 from random import randint
 
 RAYON = 10
-DIMENSION = 500
+LONGUEUR = 1000
+LARGEUR = 500
 
-fenetre = pygame.display.set_mode((DIMENSION, DIMENSION))
+fenetre = pygame.display.set_mode((LONGUEUR, LARGEUR))
 fenetre.fill([0, 0, 0])
 
 
 class Balle:     # ici on créé la classe balle
     def __init__(self):
-        self.x = randint(RAYON, DIMENSION-RAYON)
-        self.y = randint(RAYON, DIMENSION-RAYON)
+        self.x = randint(RAYON, LONGUEUR-RAYON)
+        self.y = randint(RAYON, LARGEUR-RAYON)
         self.dx = 0
         self.dy = 0
         self.couleur = (255, 255, 255)
@@ -31,8 +32,8 @@ class Balle:     # ici on créé la classe balle
         self.x += self.dx * self.coeff_frottement
         self.y += self.dy * self.coeff_frottement
 
-        if self.y < self.taille or self.y > DIMENSION - self.taille:
+        if self.y < self.taille or self.y > LARGEUR - self.taille:
             self.dy = -self.dy
-        if self.x < self.taille or self.x > DIMENSION - self.taille:
+        if self.x < self.taille or self.x > LONGUEUR - self.taille:
             self.dx = -self.dx
         pygame.draw.circle(fenetre, self.couleur, (self.x, self.y), self.taille)

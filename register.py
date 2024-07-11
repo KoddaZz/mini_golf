@@ -18,15 +18,16 @@ cursor = conn.cursor()
 username_value =""
 password_value =""
 new_user = False #-> Valeur par défaut
-DIMENSION = 500
-display_surface = pygame.display.set_mode((DIMENSION, DIMENSION))
+LONGUEUR = 1000
+LARGEUR = 500
+display_surface = pygame.display.set_mode((LONGUEUR, LARGEUR))
 pygame.init()
 
 
 #Menu Inscription
 menu_inscription = pygame_menu.Menu(
-    height=DIMENSION,
-    width=DIMENSION,
+    height=LARGEUR,
+    width=LONGUEUR,
     title="Inscription",
     theme=pygame_menu.themes.THEME_DEFAULT,
     onclose=CLOSE,

@@ -23,11 +23,13 @@ import utilities_db
 #Initalisation des scores
 touche_paroi = 0
 nbr_coups = 1
-DIMENSION = 500
+LONGUEUR = 1000
+LARGEUR = 500
 
-display_surface = pygame.display.set_mode((DIMENSION, DIMENSION))
+display_surface = pygame.display.set_mode((LONGUEUR, LARGEUR))
 pygame.init()
 
+#fond = image.load('')
 
 #Fonction permettant de gérer les déplacements de la balle
 def obtenir_direction_vers_point(point_x, point_y):
@@ -49,16 +51,16 @@ def parcours():
         menu_parcours.mainloop(display_surface)
     else:
         if choix_parcours.get_value() == '1':
-            drapeau.x2 = DIMENSION / 2
-            drapeau.y2 = DIMENSION / 10
+            drapeau.x2 = LONGUEUR / 2
+            drapeau.y2 = LARGEUR / 10
             menu_parcours.close()
         elif choix_parcours.get_value() =='2':
-            drapeau.x2 = DIMENSION / 2
-            drapeau.y2 = DIMENSION / 2
+            drapeau.x2 = LONGUEUR / 2
+            drapeau.y2 = LARGEUR / 2
             menu_parcours.close()
         else:
-            drapeau.x2 = DIMENSION * 0.90
-            drapeau.y2 = DIMENSION * 0.10
+            drapeau.x2 = LONGUEUR * 0.90
+            drapeau.y2 = LARGEUR * 0.10
             menu_parcours.close()
 
 #Fonction qui gère quel parcours sur lequel le joueur veut jouer
@@ -69,26 +71,34 @@ ma_balle = ball.Balle() # Création de la balle de golf
 drapeau = hole.LePuits() # Création du trou pour le golf
 
 # Création des Obstacles
-obstacle1 = barriers.Obstacles(200, 200, 20)
-obstacle2 = barriers.Obstacles(300, 300, 30)
+obstacle1 = barriers.Obstacles(50, 0, 20)
+obstacle2 = barriers.Obstacles(50, 20, 20)
+obstacle3 = barriers.Obstacles(50, 40, 20)
+obstacle4 = barriers.Obstacles(50, 60, 20)
+obstacle5 = barriers.Obstacles(50, 80, 20)
+obstacle6 = barriers.Obstacles(50, 100, 20)
+obstacle7 = barriers.Obstacles(50, 120, 20)
+obstacle8 = barriers.Obstacles(50, 140, 20)
+obstacle9 = barriers.Obstacles(50, 160, 20)
+obstacles = [obstacle1,obstacle2,obstacle3,obstacle4,obstacle5,obstacle6,obstacle7,obstacle8,obstacle9]
 
-obstacles = [obstacle1,obstacle2]
-
-for obstacle in obstacles:
+for i in range(100):
+        obstacle = barriers.Obstacles(70,0+i,20)
+        
         obstacle.draw()
 
 #Menu Principal du jeu
 menu = pygame_menu.Menu(
-    height=DIMENSION,
-    width=DIMENSION,
+    height=LARGEUR,
+    width=LONGUEUR,
     title="Mini Golf",
     theme=pygame_menu.themes.THEME_DEFAULT,
 )
 
 #Menu Parcours
 menu_parcours = pygame_menu.Menu(
-    height=DIMENSION,
-    width=DIMENSION,
+    height=LARGEUR,
+    width=LONGUEUR,
     title='Parcours',
     theme=pygame_menu.themes.THEME_DEFAULT,
     onclose=CLOSE,
@@ -96,8 +106,8 @@ menu_parcours = pygame_menu.Menu(
 
 #Menu du Fin du Jeu
 menu_de_fin = pygame_menu.Menu(
-    height=DIMENSION,
-    width=DIMENSION,
+    height=LARGEUR,
+    width=LONGUEUR,
     title='Menu de Fin',
     theme=pygame_menu.themes.THEME_DEFAULT,
     onclose=CLOSE,
@@ -114,7 +124,7 @@ choix_parcours = menu_parcours.add.text_input("Parcours :",default="")
 menu_parcours.add.button("Jouer !", accept_kwargs=True, action=parcours)
 
 menu_parcours.mainloop(display_surface)
-fenetre = pygame.display.set_mode((DIMENSION, DIMENSION))
+fenetre = pygame.display.set_mode((LONGUEUR, LARGEUR))
 fenetre.fill([51 ,153 , 0])
 
 
@@ -142,9 +152,9 @@ while True:
             ma_balle.dx, ma_balle.dy = obtenir_direction_vers_point(point_x, point_y)
             nbr_coups += 1
 
-    if ma_balle.y < ma_balle.taille or ma_balle.y > DIMENSION - ma_balle.taille:
+    if ma_balle.y < ma_balle.taille or ma_balle.y > LARGEUR - ma_balle.taille:
             touche_paroi +=1
-    if ma_balle.x < ma_balle.taille or ma_balle.x > DIMENSION - ma_balle.taille:
+    if ma_balle.x < ma_balle.taille or ma_balle.x > LONGUEUR - ma_balle.taille:
             touche_paroi +=1
 
     speed_magnitude = (ma_balle.dx**2 + ma_balle.dy**2)**0.5  #calcule la magnitude de la vitesse

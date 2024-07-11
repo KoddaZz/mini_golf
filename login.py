@@ -17,15 +17,16 @@ cursor = conn.cursor()
 username_value =""
 password_value =""
 
-DIMENSION = 500
+LONGUEUR = 1000
+LARGEUR = 500
 
-display_surface = pygame.display.set_mode((DIMENSION, DIMENSION))
+display_surface = pygame.display.set_mode((LONGUEUR, LARGEUR))
 pygame.init()
 
 # Création du menu "Connexion"
 menu_connexion = pygame_menu.Menu(
-    height=DIMENSION,
-    width=DIMENSION,
+    height=LARGEUR,
+    width=LONGUEUR,
     title="Connexion",
     theme=pygame_menu.themes.THEME_DEFAULT,
     onclose=CLOSE,
