@@ -1,3 +1,4 @@
+
 ##################################################################################################################################################
 #
 #                         UTILITAIRES POUR LA CONNEXION - JEU MINI GOLF  |  REALISE PAR KoddaZz
@@ -68,4 +69,3 @@ username_value = menu_connexion.add.text_input("Username:", default="")
 password_value = menu_connexion.add.text_input("Password:", password=True)
 menu_connexion.add.button("Connexion", accept_kwargs=True, action=connexion)
 menu_connexion.add.button("Quitter", accept_kwargs=True, action=CLOSE)
-
